@@ -1,0 +1,42 @@
+import urllib.request
+from urllib.parse import urlparse
+
+def fetch_webpage_content(url):
+    try:
+        # Check if the URL has a valid scheme (http or https)
+        parsed_url = urlparse(url)
+        if parsed_url.scheme not in ['http', 'https']:
+            raise ValueError("Invalid URL format. Please include http:// or https://")
+
+        # Open the URL
+        response = urllib.request.urlopen(url)
+
+        # Check the HTTP response code
+        if response.getcode() == 404:
+            raise urllib.error.HTTPError(url, response.getcode(), "Page not found", {}, None)
+
+        # Read the HTML content of the webpage
+        html_content = response.read()
+
+        # Print the HTML content
+        print("\nWebpage Content:")
+        print(html_content)
+
+    except ValueError as ve:
+        print("\nError:", ve)
+    except urllib.error.HTTPError as http_err:
+        print("\nError:", http_err)
+    except urllib.error.URLError as url_err:
+        print("\nError:", url_err)
+
+def main():
+    print("Basic Web Scraping Project")
+    print("This program extracts data from websites.")
+    print("Enter the URL of the webpage you want to scrape:")
+    user_url = input("> ")
+
+    # Fetch and display webpage content
+    fetch_webpage_content(user_url)
+
+if _name_ == "_main_":
+    main()
